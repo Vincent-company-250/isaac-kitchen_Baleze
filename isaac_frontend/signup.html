@@ -185,7 +185,7 @@ alert("Passwords do not match");
 return;
 }
 
-const res=await fetch("http://localhost:5000/api/auth/signup",{
+const res=await fetch("https://isaac-kitchen.onrender.com//api/auth/signup",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({fullname,email,password,phone})
