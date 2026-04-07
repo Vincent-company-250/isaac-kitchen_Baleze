@@ -270,7 +270,7 @@ async function saveOrder(paymentStatus, txRef=null, paymentMethod="cash") {
   };
 
   try {
-    const res = await fetch("http://localhost:5000/api/order/add", {
+    const res = await fetch("https://isaac-kitchen.onrender.com//api/order/add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(orderData)
