@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="images/logo.png" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isaac Blaze Kitchen - Services</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+body{background:#0c1b2a;color:white;overflow-x:hidden;}
+
+/* NAVBAR */
+nav{
+display:flex;justify-content:space-between;align-items:center;
+padding:20px 60px;background:#08131f;
+position:fixed;width:100%;z-index:1000;
+transition:0.3s;
+}
+nav.scrolled{background:#000;}
+.logo{color:#ff7a00;font-size:26px;font-weight:bold;cursor:pointer;}
+nav ul{display:flex;gap:40px;list-style:none;}
+nav ul li{cursor:pointer;position:relative;}
+nav ul li a{color:white;text-decoration:none;}
+nav ul li::after{
+content:'';position:absolute;width:0%;height:2px;bottom:-5px;left:0;background:#ff7a00;transition:0.3s;
+}
+nav ul li:hover::after{width:100%;}
+.menu-icon{display:none;font-size:28px;color:white;cursor:pointer;}
+
+/* HERO */
+.hero-page{
+padding:160px 60px 60px;
+text-align:center;
+}
+.hero-page h1{font-size:55px;color:#ff7a00;animation:fadeIn 1.5s;}
+.hero-page p{margin-top:15px;font-size:18px;opacity:0.85;animation:fadeIn 2s;}
+@keyframes fadeIn{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
+
+/* SERVICES CARDS */
+.services-container{padding:60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;}
+.service-card{
+background:#13273d;padding:30px;border-radius:15px;text-align:center;transition:0.4s;cursor:pointer;animation:fadeInCard 1s ease;
+}
+.service-card:hover{background:#ff7a00;transform:translateY(-10px);}
+.service-card i{font-size:40px;color:#ff7a00;margin-bottom:15px;}
+.service-card h3{margin-bottom:10px;}
+.service-card p{opacity:0.85;font-size:14px;}
+@keyframes fadeInCard{0%{opacity:0;transform:translateY(30px);}100%{opacity:1;transform:translateY(0);}}
+
+/* FOOTER */
+footer{background:#08131f;padding:40px;text-align:center;margin-top:60px;}
+footer h3{color:#ff7a00;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+.services-container{gap:20px;}
+nav ul{display:none;flex-direction:column;background:#08131f;position:absolute;top:70px;right:0;width:200px;border-radius:0 0 10px 10px;padding:10px;}
+.menu-icon{display:block;}
+nav ul.active{display:flex;}
+nav ul li{padding:10px 0;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+<div class="logo"><a href="index.html" style="color:#ff7a00;text-decoration:none;">Isaac Blaze Kitchen</a></div>
+<i class="fas fa-bars menu-icon" id="menuIcon"></i>
+<ul id="navList">
+<li><a href="index.html">Home</a></li>
+<li><a href="signup.html">Menu</a></li>
+<li><a href="service.html">Services</a></li>
+<li><a href="contactpage.html">Contact</a></li>
+<div id="google_translate_element"><h1>Change language</h1></div>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en'
+  }, 'google_translate_element');
+}
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero-page">
+<h1>Our Services</h1>
+<p>Discover the professional services we offer for a great dining experience.</p>
+</section>
+
+<!-- SERVICES CARDS -->
+<section class="services-container">
+<div class="service-card">
+<i class="fas fa-shipping-fast"></i>
+<h3>Fast Delivery</h3>
+<p>Get your meals delivered quickly and hot at your doorstep.</p>
+</div>
+<div class="service-card">
+<i class="fas fa-utensils"></i>
+<h3>Dine In</h3>
+<p>Comfortable environment to enjoy meals with friends and family.</p>
+</div>
+<div class="service-card">
+<i class="fas fa-birthday-cake"></i>
+<h3>Catering</h3>
+<p>Perfect catering for events, parties, and weddings.</p>
+</div>
+<div class="service-card">
+<i class="fas fa-laptop"></i>
+<h3>Online Orders</h3>
+<p>Easy ordering system with fast and secure checkout.</p>
+</div>
+<div class="service-card">
+<i class="fas fa-star"></i>
+<h3>Special Offers</h3>
+<p>Enjoy exclusive deals and seasonal specials regularly.</p>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<h3>Isaac Blaze Kitchen</h3>
+<p>Best restaurant experience in Rwanda</p>
+<p>Contact: +250 xxx xxx</p>
+<div class="social-icons">
+<i class="fab fa-facebook-f"></i>
+<i class="fab fa-google"></i>
+<i class="fab fa-twitter"></i>
+</div>
+</footer>
+
+<script>
+// HAMBURGER MENU
+const menuIcon = document.getElementById("menuIcon");
+const navList = document.getElementById("navList");
+menuIcon.addEventListener("click",()=>{navList.classList.toggle("active");});
+
+// NAVBAR SCROLL EFFECT
+window.addEventListener("scroll",()=>{
+let nav=document.querySelector("nav");
+nav.classList.toggle("scrolled",window.scrollY>50);
+});
+</script>
+
+</body>
+</html>

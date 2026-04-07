@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="images/logo.png" type="image/png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isaac Blaze Kitchen - Contact</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+body{background:#0c1b2a;color:white;overflow-x:hidden;}
+
+/* NAVBAR */
+nav{
+display:flex;justify-content:space-between;align-items:center;
+padding:20px 60px;background:#08131f;
+position:fixed;width:100%;z-index:1000;transition:0.3s;
+}
+nav.scrolled{background:#000;}
+.logo{color:#ff7a00;font-size:26px;font-weight:bold;}
+nav ul{display:flex;gap:40px;list-style:none;}
+nav ul li a{color:white;text-decoration:none;}
+.menu-icon{display:none;font-size:28px;color:white;cursor:pointer;}
+.login-btn{background:#ff7a00;border:none;padding:10px 25px;color:white;border-radius:5px;cursor:pointer;transition:0.3s;}
+.login-btn:hover{transform:scale(1.05);}
+
+/* HERO / TITLE */
+.hero-page{
+padding:160px 60px 60px;text-align:center;
+}
+.hero-page h1{font-size:55px;color:#ff7a00;animation:fadeIn 1.5s;}
+.hero-page p{margin-top:15px;font-size:18px;opacity:0.85;animation:fadeIn 2s;}
+@keyframes fadeIn{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
+
+/* CONTACT FORM */
+.contact-container{padding:60px 60px;display:flex;justify-content:center;align-items:flex-start;gap:60px;flex-wrap:wrap;}
+.contact-form{background:#13273d;padding:30px;border-radius:15px;flex:1;min-width:300px;max-width:500px;}
+.contact-form h3{color:#ff7a00;margin-bottom:20px;}
+.contact-form input, .contact-form textarea{width:100%;padding:12px;margin-bottom:15px;border-radius:6px;border:none;font-size:14px;}
+.contact-form input:focus, .contact-form textarea:focus{outline:none;box-shadow:0 0 10px #ff7a00;}
+.contact-form button{padding:12px 20px;background:#ff7a00;border:none;color:white;border-radius:6px;cursor:pointer;font-size:16px;transition:0.3s;}
+.contact-form button:hover{transform:scale(1.05);}
+.contact-info{flex:1;min-width:300px;color:white;}
+.contact-info h3{color:#ff7a00;margin-bottom:20px;}
+.contact-info p{margin-bottom:15px;opacity:0.85;font-size:14px;}
+
+/* Form message */
+#formMessage{
+  display:none;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:5px;
+  font-weight:bold;
+}
+
+/* FOOTER */
+footer{background:#08131f;padding:40px;text-align:center;margin-top:60px;}
+footer h3{color:#ff7a00;margin-bottom:15px;}
+footer p{opacity:0.85;font-size:14px;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+.contact-container{gap:30px;padding:40px;}
+nav ul{display:none;flex-direction:column;background:#08131f;position:absolute;top:70px;right:0;width:200px;border-radius:0 0 10px 10px;padding:10px;}
+nav ul.active{display:flex;}
+.menu-icon{display:block;}
+nav ul li{padding:10px 0;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+<div class="logo"><a href="index.html" style="color:#ff7a00;text-decoration:none;">Isaac Blaze Kitchen</a></div>
+<i class="fas fa-bars menu-icon" id="menuIcon"></i>
+<ul id="navList">
+<li><a href="index.html">Home</a></li>
+<li><a href="signup.html">Menu</a></li>
+<li><a href="service.html">Services</a></li>
+<li><a href="contactpage.html">Contact</a></li>
+</ul>
+<!--<a href="signup.html"><button class="login-btn">Sign Up</button></a>-->
+<div id="google_translate_element"><h1>Change language</h1></div>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en'
+  }, 'google_translate_element');
+}
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</nav>
+
+<!-- HERO -->
+<section class="hero-page">
+<h1>Contact Us</h1>
+<p>We are here to listen! Send us your message or inquiry.</p>
+</section>
+
+<!-- CONTACT FORM & INFO -->
+<section class="contact-container">
+<div class="contact-form">
+<h3>Send a Message</h3>
+<div id="formMessage"></div>
+<form id="contactForm">
+<input type="text" name="name" placeholder="Your Name" required>
+<input type="email" name="email" placeholder="Your Email" required>
+<textarea name="message" rows="6" placeholder="Your Message" required></textarea>
+<button type="submit">Send Message</button>
+</form>
+</div>
+
+<div class="contact-info">
+<h3>Get in Touch</h3>
+<p><i class="fas fa-map-marker-alt"></i> Kigali, Rwanda</p>
+<p><i class="fas fa-phone"></i> +250 xxx xxx xxx</p>
+<p><i class="fas fa-envelope"></i> info@isaacblazekitchen.com</p>
+<p><i class="fas fa-clock"></i> Mon - Sat: 8:00 AM - 8:00 PM</p>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<h3>Isaac Blaze Kitchen</h3>
+<p>Best restaurant experience in Rwanda</p>
+<p>Contact: +250 xxx xxx</p>
+</footer>
+
+<script>
+// Hamburger menu
+const menuIcon = document.getElementById("menuIcon");
+const navList = document.getElementById("navList");
+menuIcon.addEventListener("click",()=>navList.classList.toggle("active"));
+
+// Navbar scroll effect
+window.addEventListener("scroll",()=>{document.querySelector("nav").classList.toggle("scrolled",window.scrollY>50)});
+
+// Contact form submission with validation & backend
+const contactForm = document.getElementById('contactForm');
+const formMessage = document.getElementById('formMessage');
+
+function showMessage(text, success=true){
+  formMessage.style.display = 'block';
+  formMessage.style.background = success ? '#0f5132' : '#842029';
+  formMessage.style.color = 'white';
+  formMessage.innerText = text;
+  setTimeout(()=> formMessage.style.display='none', 5000);
+}
+
+contactForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const name = contactForm.name.value.trim();
+  const email = contactForm.email.value.trim();
+  const message = contactForm.message.value.trim();
+
+  // Validation
+  if(!name || !email || !message){
+    showMessage('Please fill all fields!', false);
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRegex.test(email)){
+    showMessage('Please enter a valid email!', false);
+    return;
+  }
+
+  try {
+    const res = await fetch('http://localhost:5000/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message })
+    });
+
+    const data = await res.json();
+    showMessage(data.message, data.success);
+    if(data.success) contactForm.reset();
+  } catch(err){
+    console.error(err);
+    showMessage('Server error. Try again later.', false);
+  }
+});
+</script>
+
+</body>
+</html>

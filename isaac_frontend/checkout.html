@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="images/logo.png" type="image/png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Isaac Blaze Kitchen - Order & Checkout</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://checkout.flutterwave.com/v3.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+    body{background:#0c1b2a;color:white;overflow-x:hidden;}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:20px 60px;background:#08131f;position:fixed;width:100%;z-index:1000;transition:0.3s;}
+    nav.scrolled{background:#000;}
+    .logo img{height:50px;}
+    nav ul{display:flex;gap:30px;list-style:none;align-items:center;}
+    nav ul li{cursor:pointer;position:relative;}
+    nav ul li a{color:white;text-decoration:none;padding:10px 0;display:block;}
+    nav ul li::after{content:'';position:absolute;width:0%;height:2px;bottom:0;left:0;background:#ff7a00;transition:0.3s;}
+    nav ul li:hover::after{width:100%;}
+    .menu-icon{display:none;font-size:28px;color:white;cursor:pointer;z-index:10000;}
+    .login-btn{background:#ff7a00;border:none;padding:10px 25px;color:white;border-radius:5px;cursor:pointer;transition:0.3s;}
+    .login-btn:hover{transform:scale(1.05);}
+    .hero-page{padding:160px 60px 60px;text-align:center;}
+    .hero-page h1{font-size:55px;color:#ff7a00;animation:fadeIn 1.5s;}
+    .hero-page p{margin-top:15px;font-size:18px;opacity:0.85;animation:fadeIn 2s;}
+    .menu-container{padding:60px 60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;}
+    .menu-card{background:#13273d;border-radius:15px;overflow:hidden;transition:0.4s;cursor:pointer;}
+    .menu-card:hover{transform:translateY(-10px) scale(1.03);}
+    .menu-card img{width:100%;height:200px;object-fit:cover;}
+    .menu-card .info{padding:20px;}
+    .menu-card .info h3{color:#ff7a00;margin-bottom:10px;}
+    .menu-card .info p{font-size:14px;opacity:0.85;}
+    .menu-card .info .price{margin-top:10px;font-weight:bold;color:#ff7a00;}
+    .category-title{color:#ff7a00;font-size:28px;margin:40px 0 20px;border-bottom:2px solid #ff7a00;display:inline-block;padding-bottom:5px;}
+    .cart-container{position:fixed;top:80px;right:20px;background:#08131f;padding:20px;border-radius:10px;width:300px;max-height:70vh;overflow-y:auto;box-shadow:0 0 20px black;z-index:50;}
+    .cart-container h3{color:#ff7a00;margin-bottom:15px;}
+    .cart-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+    .cart-item span{display:block;}
+    .cart-item input{width:40px;text-align:center;margin-left:5px;border-radius:5px;border:none;}
+    .cart-item button{background:red;border:none;color:white;border-radius:5px;padding:0 5px;cursor:pointer;}
+    .cart-total{margin-top:15px;font-weight:bold;color:#ff7a00;text-align:right;display:block;}
+    .checkout-btn{width:100%;padding:10px;background:#ff7a00;border:none;color:white;border-radius:5px;cursor:pointer;margin-top:10px;transition:0.3s;}
+    .checkout-btn:hover{transform:scale(1.05);}
+    #checkoutModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:2000;}
+    #checkoutModal .modal-content{background:#08131f;padding:30px;border-radius:15px;width:90%;max-width:500px;position:relative;animation:slideDown 0.5s;}
+    #checkoutModal #closeModal{position:absolute;top:15px;right:20px;cursor:pointer;font-size:22px;color:#ff7a00;}
+    #checkoutItems div{display:flex;justify-content:space-between;margin-bottom:5px;}
+    .success-message{background:#0a8000;color:white;padding:10px;border-radius:5px;margin-top:10px;text-align:center;display:none;}
+    @keyframes slideDown{0%{opacity:0;transform:translateY(-50px);}100%{opacity:1;transform:translateY(0);} }
+    @media(max-width:1024px){
+      nav{padding:15px 30px;}
+      nav ul{display:flex;flex-direction:column;position:fixed;top:0;right:-300px;height:100vh;width:260px;background:rgba(8,19,31,0.95);backdrop-filter:blur(10px);padding:80px 25px;gap:20px;z-index:1002;box-shadow:-5px 0 20px rgba(0,0,0,0.6);transition:0.4s;}
+      nav ul.active{right:0;display:flex;}
+      .menu-icon{display:block;}
+      nav ul li{text-align:right;}
+      nav ul li button.login-btn{width:100%;padding:12px;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <a href="index.html">
+      <img src="images/logo.png" alt="Isaac Blaze Kitchen Logo">
+      Isaac Blaze Kitchen
+    </a>
+  </div>
+  <i class="fas fa-bars menu-icon" id="menuIcon"></i>
+  <ul id="navList">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="signup.html">Menu</a></li>
+    <li><a href="service.html">Services</a></li>
+    <li><a href="contactpage.html">Contact</a></li>
+    <li><a href="signup.html"><button class="login-btn">Sign Up</button></a></li>
+  </ul>
+</nav>
+
+<section class="hero-page">
+  <h1>Order Online</h1>
+  <p>Choose your meals and send order to checkout!</p>
+</section>
+
+<h2 class="category-title">Menu</h2>
+<div class="menu-container" id="menuContainer"></div>
+
+<div class="cart-container" id="cartContainer">
+  <h3>Your Cart</h3>
+  <div id="cartItems"></div>
+  <div class="cart-total" id="cartTotal">Total: 0 RWF</div>
+  <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+  <div class="success-message" id="successMessage">Payment successful! Order confirmed.</div>
+</div>
+
+<div id="checkoutModal">
+  <div class="modal-content">
+    <span id="closeModal">&times;</span>
+
+    <!-- Step 1: User Info -->
+    <div id="userInfoStep">
+      <h2 style="color:#ff7a00;margin-bottom:15px;">Your Info</h2>
+      <form id="userInfoForm">
+        <input type="text" id="userName" placeholder="Your Name" required style="width:100%;padding:8px;margin-bottom:10px;border-radius:5px;border:none;">
+        <input type="email" id="userEmail" placeholder="Your Email" required style="width:100%;padding:8px;margin-bottom:10px;border-radius:5px;border:none;">
+        <input type="text" id="userPhone" placeholder="Phone Number" required style="width:100%;padding:8px;margin-bottom:15px;border-radius:5px;border:none;">
+        <button type="submit" style="width:100%;padding:12px;background:#ff7a00;border:none;color:white;border-radius:5px;font-size:16px;cursor:pointer;">Next</button>
+      </form>
+    </div>
+
+    <!-- Step 2: Payment -->
+    <div id="paymentStep" style="display:none;">
+      <h2 style="color:#ff7a00;margin-bottom:15px;">Checkout</h2>
+      <div id="checkoutItems" style="max-height:250px;overflow-y:auto;margin-bottom:15px;"></div>
+      <form id="checkoutForm">
+        <label for="paymentMethod" style="color:#ff7a00;font-weight:bold;">Payment Method:</label>
+        <select id="paymentMethod" style="width:100%;padding:8px;margin-top:5px;border-radius:5px;border:none;">
+          <option value="">--Choose--</option>
+          <option value="mobile">Mobile Money</option>
+          <option value="cash">Cash</option>
+        </select>
+        <div id="mobileInputWrapper" style="display:none;margin-top:10px;">
+          <input type="text" id="mobileNumber" placeholder="Enter Mobile Number" style="width:100%;padding:8px;border-radius:5px;border:none;">
+        </div>
+        <button type="submit" style="width:100%;margin-top:15px;padding:12px;background:#ff7a00;border:none;color:white;border-radius:5px;font-size:16px;cursor:pointer;">Pay Now</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <h3>Isaac Blaze Kitchen</h3>
+  <p>Best restaurant experience in Rwanda</p>
+  <p>Contact: +250 xxx xxx</p>
+</footer>
+
+<script>
+const menuContainer = document.getElementById("menuContainer");
+const cartItems = document.getElementById("cartItems");
+let cart = [];
+
+// Load menu
+async function loadMenu(){
+  try{
+    const res = await fetch("http://localhost:5000/api/menu");
+    if(!res.ok) throw new Error("Failed to fetch menu");
+    const menuItems = await res.json();
+    menuContainer.innerHTML = "";
+    menuItems.forEach(item=>{
+      const card = document.createElement("div");
+      card.className="menu-card";
+      card.innerHTML = `
+        <img src="http://localhost:5000/uploads/${item.img}" alt="${item.name}">
+        <div class="info">
+          <h3>${item.name}</h3>
+          <p>${item.price.toLocaleString()} RWF</p>
+        </div>`;
+      card.addEventListener("click",()=>addToCart(item));
+      menuContainer.appendChild(card);
+    });
+  }catch(err){
+    console.error(err);
+    menuContainer.innerHTML="<p style='color:#ff7a00'>Failed to load menu.</p>";
+  }
+}
+
+function addToCart(item){
+  const exist = cart.find(i=>i.id===item.id);
+  if(exist) exist.quantity+=1;
+  else cart.push({...item, quantity:1});
+  renderCart();
+}
+
+function renderCart(){
+  cartItems.innerHTML="";
+  let total=0;
+  cart.forEach((item,i)=>{
+    const subtotal=item.price*item.quantity;
+    total+=subtotal;
+    const div=document.createElement("div");
+    div.className="cart-item";
+    div.innerHTML=`<span>${item.name} x <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${i},this.value)"></span>
+                     <span>${subtotal.toLocaleString()} RWF</span>
+                     <button onclick="removeItem(${i})">x</button>`;
+    cartItems.appendChild(div);
+  });
+  document.getElementById("cartTotal").innerText=`Total: ${total.toLocaleString()} RWF`;
+}
+
+function updateQuantity(index,value){
+  cart[index].quantity=parseInt(value)||1;
+  renderCart();
+}
+
+function removeItem(i){ cart.splice(i,1); renderCart(); }
+
+// Navigation menu toggle
+const menuIcon=document.getElementById("menuIcon");
+const navList=document.getElementById("navList");
+menuIcon.addEventListener("click",()=>navList.classList.toggle("active"));
+window.addEventListener("scroll",()=>document.querySelector("nav").classList.toggle("scrolled",window.scrollY>50));
+
+// Checkout steps
+const checkoutBtn = document.getElementById("checkoutBtn");
+const checkoutModal = document.getElementById("checkoutModal");
+const closeModal = document.getElementById("closeModal");
+const checkoutItems = document.getElementById("checkoutItems");
+
+const userInfoStep = document.getElementById("userInfoStep");
+const userInfoForm = document.getElementById("userInfoForm");
+const paymentStep = document.getElementById("paymentStep");
+
+let userData = {};
+
+checkoutBtn.addEventListener("click", () => {
+  if (cart.length === 0) { alert("Your cart is empty!"); return; }
+  checkoutModal.style.display = "flex";
+  userInfoStep.style.display = "block";
+  paymentStep.style.display = "none";
+});
+
+closeModal.addEventListener("click", () => checkoutModal.style.display = "none");
+window.addEventListener("click", (e) => { if (e.target === checkoutModal) checkoutModal.style.display = "none"; });
+
+// Step 1: User Info Form
+userInfoForm.addEventListener("submit", e => {
+  e.preventDefault();
+  userData.name = document.getElementById("userName").value.trim();
+  userData.email = document.getElementById("userEmail").value.trim();
+  userData.phone = document.getElementById("userPhone").value.trim();
+
+  if (!userData.name || !userData.email || !userData.phone) { alert("Fill all fields"); return; }
+
+  userInfoStep.style.display = "none";
+  paymentStep.style.display = "block";
+
+  // Render cart items in payment step
+  checkoutItems.innerHTML = "";
+  cart.forEach(item => {
+    const div = document.createElement("div");
+    div.style.display="flex"; div.style.justifyContent="space-between"; div.style.marginBottom="5px"; div.style.color="#ff7a00";
+    div.innerHTML = `<span>${item.name} x ${item.quantity}</span><span>${(item.price*item.quantity).toLocaleString()} RWF</span>`;
+    checkoutItems.appendChild(div);
+  });
+});
+
+// Payment method toggle
+const paymentMethod = document.getElementById("paymentMethod");
+const mobileInputWrapper = document.getElementById("mobileInputWrapper");
+const mobileNumberInput = document.getElementById("mobileNumber");
+const successMessage = document.getElementById("successMessage");
+
+paymentMethod.addEventListener("change", () => {
+  mobileInputWrapper.style.display = (paymentMethod.value==="mobile") ? "block":"none";
+});
+
+// Function to save order to backend
+async function saveOrder(paymentStatus, txRef=null, paymentMethod="cash") {
+  const orderData = {
+    user_id: null,
+    customer_name: userData.name,
+    customer_email: userData.email,
+    customer_phone: userData.phone,
+    address: "",
+    payment_method: paymentMethod,
+    payment_status: paymentStatus,
+    order_status: "Pending",
+    tx_ref: txRef,
+    items: cart.map(item => ({ menu_id: item.id, price: item.price, quantity: item.quantity }))
+  };
+
+  try {
+    const res = await fetch("http://localhost:5000/api/order/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderData)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Order failed");
+    successMessage.style.display = "block";
+    cart = [];
+    renderCart();
+  } catch (err) {
+    console.error("Save order error:", err);
+    alert("Failed to save order: " + err.message);
+  }
+}
+
+// Payment form submit
+document.getElementById("checkoutForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const method = paymentMethod.value;
+  const mobileNumber = mobileNumberInput.value.trim();
+  if (!method) { alert("Select payment method"); return; }
+  if (method === "mobile" && !mobileNumber) { alert("Enter mobile number"); return; }
+
+  const total = cart.reduce((sum,item)=>sum + item.price*item.quantity,0);
+
+  if (method === "mobile") {
+    FlutterwaveCheckout({
+      public_key: "FLWPUBK_TEST-2877ac3d052a362313a27f49732aa88d-X",
+      tx_ref: "TX-" + Date.now(),
+      amount: total,
+      currency: "RWF",
+      payment_options: "mobilemoneyrw",
+      customer: { email: userData.email, phonenumber: mobileNumber, name: userData.name },
+      callback: function(data) {
+        if(data.status==="successful"){
+          saveOrder("paid", data.tx_ref, "mobile");
+          checkoutModal.style.display="none";
+        } else { alert("Payment failed or canceled"); }
+      },
+      onclose: function() { console.log("Payment modal closed"); },
+      customizations: { title: "Isaac Blaze Kitchen", description: "Payment for your order", logo: "images/6.jpg" }
+    });
+  } else {
+    alert("Cash selected. Complete order at delivery.");
+    saveOrder("pending", null, "cash");
+    checkoutModal.style.display="none";
+  }
+});
+
+loadMenu();
+</script>
+</body>
+</html>

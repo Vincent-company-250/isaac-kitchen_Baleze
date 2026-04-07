@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isaac Blaze Kitchen - Menu</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+body{background:#0c1b2a;color:white;overflow-x:hidden;}
+
+/* NAVBAR */
+nav{
+display:flex;justify-content:space-between;align-items:center;
+padding:20px 60px;background:#08131f;
+position:fixed;width:100%;z-index:1000;transition:0.3s;
+}
+nav.scrolled{background:#000;}
+.logo{color:#ff7a00;font-size:26px;font-weight:bold;}
+nav ul{display:flex;gap:40px;list-style:none;}
+nav ul li{cursor:pointer;position:relative;}
+nav ul li a{color:white;text-decoration:none;}
+nav ul li::after{content:'';position:absolute;width:0%;height:2px;bottom:-5px;left:0;background:#ff7a00;transition:0.3s;}
+nav ul li:hover::after{width:100%;}
+.menu-icon{display:none;font-size:28px;color:white;cursor:pointer;}
+.login-btn{background:#ff7a00;border:none;padding:10px 25px;color:white;border-radius:5px;cursor:pointer;transition:0.3s;}
+.login-btn:hover{transform:scale(1.05);}
+
+/* HERO */
+.hero-page{
+padding:160px 60px 60px;text-align:center;
+}
+.hero-page h1{font-size:55px;color:#ff7a00;animation:fadeIn 1.5s;}
+.hero-page p{margin-top:15px;font-size:18px;opacity:0.85;animation:fadeIn 2s;}
+@keyframes fadeIn{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
+
+/* MENU CARDS */
+.menu-container{padding:60px 60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;}
+.menu-card{background:#13273d;border-radius:15px;overflow:hidden;transition:0.4s;cursor:pointer;}
+.menu-card:hover{transform:translateY(-10px) scale(1.03);}
+.menu-card img{width:100%;height:200px;object-fit:cover;}
+.menu-card .info{padding:20px;}
+.menu-card .info h3{color:#ff7a00;margin-bottom:10px;}
+.menu-card .info p{font-size:14px;opacity:0.85;}
+.menu-card .info .price{margin-top:10px;font-weight:bold;color:#ff7a00;}
+.category-title{color:#ff7a00;font-size:28px;margin:40px 0 20px;border-bottom:2px solid #ff7a00;display:inline-block;padding-bottom:5px;}
+
+/* CART */
+.cart-container{position:fixed;top:80px;right:20px;background:#08131f;padding:20px;border-radius:10px;width:300px;max-height:70vh;overflow-y:auto;box-shadow:0 0 20px black;z-index:1001;}
+.cart-container h3{color:#ff7a00;margin-bottom:15px;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.cart-item span{display:block;}
+.cart-total{margin-top:15px;font-weight:bold;color:#ff7a00;text-align:right;}
+.checkout-btn{width:100%;padding:10px;background:#ff7a00;border:none;color:white;border-radius:5px;cursor:pointer;margin-top:10px;transition:0.3s;}
+.checkout-btn:hover{transform:scale(1.05);}
+
+/* FOOTER */
+footer{background:#08131f;padding:40px;text-align:center;margin-top:60px;}
+footer h3{color:#ff7a00;margin-bottom:15px;}
+footer p{opacity:0.85;font-size:14px;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+.menu-container{gap:20px;}
+nav ul{display:none;flex-direction:column;background:#08131f;position:absolute;top:70px;right:0;width:200px;border-radius:0 0 10px 10px;padding:10px;}
+nav ul.active{display:flex;}
+.menu-icon{display:block;}
+nav ul li{padding:10px 0;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+<div class="logo"><a href="index.html" style="color:#ff7a00;text-decoration:none;">Isaac Blaze Kitchen</a></div>
+<i class="fas fa-bars menu-icon" id="menuIcon"></i>
+<ul id="navList">
+<li><a href="index.html">Home</a></li>
+<li><a href="menu.html">Menu</a></li>
+<li><a href="service.html">Services</a></li>
+    <li><a href="contactpage.html">Contact</a></li>
+</ul>
+<a href="signup.html"><button class="login-btn">Sign Up</button></a>
+</nav>
+
+<!-- HERO -->
+<section class="hero-page">
+<h1>Order Online</h1>
+<p>Choose your meals and send order to checkout!</p>
+</section>
+
+<h2 class="category-title">Menu</h2>
+<div class="menu-container" id="menuContainer"></div>
+
+<div class="cart-container" id="cartContainer">
+<h3>Your Cart</h3>
+<div id="cartItems"></div>
+<div class="cart-total" id="cartTotal">Total: 0 RWF</div>
+<button class="checkout-btn" id="checkoutBtn">Checkout</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+<h3>Isaac Blaze Kitchen</h3>
+<p>Best restaurant experience in Rwanda</p>
+<p>Contact: +250 xxx xxx</p>
+<div class="social-icons">
+<i class="fab fa-facebook-f"></i>
+<i class="fab fa-google"></i>
+<i class="fab fa-twitter"></i>
+</div>
+</footer>
+
+<script>
+// MENU DATA
+const menuData = [
+{ id:1,name:"French Fries",price:3000,img:"images/1.jpg" },
+{ id:2,name:"Grilled Chicken",price:6000,img:"images/3.jpg" },
+{ id:3,name:"Beef Burger",price:5500,img:"images/4.jpg" },
+{ id:4,name:"Rice Combo",price:4500,img:"images/5.jpg" },
+{ id:5,name:"Chocolate Cake",price:2500,img:"images/6.jpg" },
+{ id:6,name:"Ice Cream",price:1500,img:"images/7.jpg" },
+];
+
+// RENDER MENU
+const menuContainer = document.getElementById("menuContainer");
+menuData.forEach(item=>{
+  const card = document.createElement("div");
+  card.className="menu-card";
+  card.innerHTML=`<img src="${item.img}"><div class="info"><h3>${item.name}</h3><p>${item.price.toLocaleString()} RWF</p></div>`;
+  card.addEventListener("click",()=>addToCart(item));
+  menuContainer.appendChild(card);
+});
+
+// CART FUNCTIONALITY
+let cart=[];
+const cartItems = document.getElementById("cartItems");
+const cartTotal = document.getElementById("cartTotal");
+function addToCart(item){cart.push(item);renderCart();}
+function renderCart(){
+cartItems.innerHTML="";
+let total=0;
+cart.forEach((item,i)=>{
+total+=item.price;
+const div=document.createElement("div");
+div.className="cart-item";
+div.innerHTML=`<span>${item.name}</span><span>${item.price.toLocaleString()} RWF</span><button onclick="removeItem(${i})">x</button>`;
+cartItems.appendChild(div);
+});
+cartTotal.innerText=`Total: ${total.toLocaleString()} RWF`;
+}
+function removeItem(index){cart.splice(index,1);renderCart();}
+
+// HAMBURGER MENU FUNCTIONALITY
+const menuIcon = document.getElementById("menuIcon");
+const navList = document.getElementById("navList");
+menuIcon.addEventListener("click",()=>{navList.classList.toggle("active");});
+
+// NAVBAR SCROLL EFFECT
+window.addEventListener("scroll",()=>{
+let nav=document.querySelector("nav");
+nav.classList.toggle("scrolled",window.scrollY>50);
+});
+</script>
+
+</body>
+</html>

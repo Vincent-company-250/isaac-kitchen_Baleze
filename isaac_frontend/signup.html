@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="images/logo.png" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isaac Blaze Kitchen - Auth</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+body{background:#0c1b2a;color:white;display:flex;flex-direction:column;min-height:100vh;}
+
+nav{display:flex;justify-content:space-between;padding:20px 40px;background:#08131f;}
+.logo{color:#ff7a00;font-size:22px;font-weight:bold;}
+
+.hero-page{text-align:center;padding:100px 20px 30px;}
+.hero-page h1{color:#ff7a00;font-size:38px;}
+
+.form-container{display:flex;justify-content:center;flex:1;}
+.form-box{background:#13273d;padding:30px;border-radius:12px;width:100%;max-width:380px;}
+
+.toggle-buttons{display:flex;gap:15px;justify-content:center;margin-bottom:20px;}
+.toggle-buttons button{padding:8px 20px;border:none;background:#08131f;color:white;border-radius:6px;cursor:pointer;}
+.toggle-buttons .active{background:#ff7a00;}
+
+form{display:none;}
+form.active{display:block;}
+
+.input-group{position:relative;}
+input{width:100%;padding:12px;margin-bottom:15px;border:none;border-radius:6px;}
+input:focus{outline:none;box-shadow:0 0 8px #ff7a00;}
+
+.input-group i{position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:#ff7a00;}
+
+.submit-btn{width:100%;padding:12px;background:#ff7a00;border:none;color:white;border-radius:6px;cursor:pointer;}
+.submit-btn:hover{transform:scale(1.03);}
+
+.social-icons{display:flex;justify-content:center;gap:15px;margin-top:10px;}
+.social-icons i{cursor:pointer;}
+.social-icons i:hover{color:#ff7a00;}
+
+footer{text-align:center;padding:15px;background:#08131f;margin-top:auto;}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div class="logo">Isaac Blaze Kitchen</div>
+</nav>
+
+<section class="hero-page">
+<h1>Welcome</h1>
+<p>Login, Signup & Verify OTP</p>
+</section>
+
+<section class="form-container">
+<div class="form-box">
+
+<div class="toggle-buttons">
+<button id="loginBtn" class="active">Login</button>
+<button id="signupBtn">Sign Up</button>
+</div>
+
+<!-- LOGIN -->
+<form id="loginForm" class="active">
+<input name="email" type="email" placeholder="Email" required>
+
+<div class="input-group">
+<input name="password" type="password" placeholder="Password" required>
+<i class="fas fa-eye toggle-password"></i>
+</div>
+
+<button class="submit-btn">Login</button>
+
+<div class="social-icons">
+<i class="fab fa-facebook-f"></i>
+<i class="fab fa-google"></i>
+<i class="fab fa-twitter"></i>
+</div>
+</form>
+
+<!-- SIGNUP -->
+<form id="signupForm">
+<input name="fullname" type="text" placeholder="Full Name" required>
+<input name="email" type="email" placeholder="Email" required>
+<input name="phone" type="text" placeholder="Phone (+250...)" required>
+
+<div class="input-group">
+<input name="password" type="password" placeholder="Password" required>
+<i class="fas fa-eye toggle-password"></i>
+</div>
+
+<div class="input-group">
+<input name="confirmPassword" type="password" placeholder="Confirm Password" required>
+<i class="fas fa-eye toggle-password"></i>
+</div>
+
+<button class="submit-btn">Sign Up</button>
+
+<div class="social-icons">
+<i class="fab fa-facebook-f"></i>
+<i class="fab fa-google"></i>
+<i class="fab fa-twitter"></i>
+</div>
+</form>
+
+<!-- OTP -->
+<form id="otpForm">
+<input name="otp" type="text" placeholder="Enter OTP Code" required>
+
+<button class="submit-btn">Verify OTP</button>
+
+<p style="text-align:center;font-size:14px;margin-top:10px;">
+Check your phone for OTP
+</p>
+</form>
+
+</div>
+</section>
+
+<footer>
+<p>Isaac Blaze Kitchen © 2026</p>
+</footer>
+
+<script>
+const loginBtn=document.getElementById("loginBtn");
+const signupBtn=document.getElementById("signupBtn");
+const loginForm=document.getElementById("loginForm");
+const signupForm=document.getElementById("signupForm");
+const otpForm=document.getElementById("otpForm");
+
+// SWITCH FORMS
+loginBtn.onclick=()=>{
+loginForm.classList.add("active");
+signupForm.classList.remove("active");
+otpForm.classList.remove("active");
+loginBtn.classList.add("active");
+signupBtn.classList.remove("active");
+};
+
+signupBtn.onclick=()=>{
+signupForm.classList.add("active");
+loginForm.classList.remove("active");
+otpForm.classList.remove("active");
+signupBtn.classList.add("active");
+loginBtn.classList.remove("active");
+};
+
+// SHOW OTP
+function showOTP(){
+signupForm.classList.remove("active");
+loginForm.classList.remove("active");
+otpForm.classList.add("active");
+}
+
+// SHOW PASSWORD
+document.querySelectorAll(".toggle-password").forEach(icon=>{
+icon.onclick=()=>{
+const input=icon.previousElementSibling;
+if(input.type==="password"){
+input.type="text";
+icon.classList.replace("fa-eye","fa-eye-slash");
+}else{
+input.type="password";
+icon.classList.replace("fa-eye-slash","fa-eye");
+}
+};
+});
+
+// SIGNUP
+signupForm.addEventListener("submit", async e=>{
+e.preventDefault();
+
+const fullname=signupForm.fullname.value.trim();
+const email=signupForm.email.value.trim();
+const phone=signupForm.phone.value.trim();
+const password=signupForm.password.value;
+const confirmPassword=signupForm.confirmPassword.value;
+
+if(password!==confirmPassword){
+alert("Passwords do not match");
+return;
+}
+
+const res=await fetch("http://localhost:5000/api/auth/signup",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({fullname,email,password,phone})
+});
+
+const data=await res.json();
+
+if(res.ok){
+localStorage.setItem("userId",data.userId);
+alert("OTP sent!");
+showOTP();
+}else{
+alert(data.error);
+}
+});
+
+// VERIFY OTP
+otpForm.addEventListener("submit", async e=>{
+e.preventDefault();
+
+const otp=otpForm.otp.value;
+const userId=localStorage.getItem("userId");
+
+const res=await fetch("http://localhost:5000/api/auth/verify-otp",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({userId,otp})
+});
+
+const data=await res.json();
+
+if(res.ok){
+alert("Verified!");
+loginBtn.click();
+}else{
+alert(data.error);
+}
+});
+
+// LOGIN
+loginForm.addEventListener("submit", async e=>{
+e.preventDefault();
+
+const email=loginForm.email.value;
+const password=loginForm.password.value;
+
+const res=await fetch("http://localhost:5000/api/auth/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email,password})
+});
+
+const data=await res.json();
+
+if(res.ok){
+localStorage.setItem("token",data.token);
+window.location.href="checkout.html";
+}else{
+alert(data.error);
+}
+});
+</script>
+
+</body>
+</html>

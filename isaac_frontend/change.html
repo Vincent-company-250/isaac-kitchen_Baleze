@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" href="images/logo.png" type="image/png">
+<meta charset="UTF-8">
+<title>Google Translate Test</title>
+</head>
+<body>
+
+<h1>Welcome to My Website</h1>
+<p>This is a test page for Google Translate.</p>
+
+<div id="google_translate_element"></div>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en'
+  }, 'google_translate_element');
+}
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>

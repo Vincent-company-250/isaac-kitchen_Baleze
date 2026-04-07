@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="images/logo.png" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isaac Blaze Kitchen</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+body{background:#0c1b2a;color:white;overflow-x:hidden;}
+
+/* NAVBAR */
+nav{
+display:flex;justify-content:space-between;align-items:center;
+padding:20px 60px;background:#08131f;
+position:fixed;width:100%;z-index:1000;transition:0.3s;
+}
+nav.scrolled{background:#000;}
+
+.logo{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.logo img{height:70px;border-radius:20%;}
+
+.logo p{color:#ff7a00;font-size:22px;font-weight:bold;}
+
+nav ul{
+display:flex;
+gap:40px;
+list-style:none;
+align-items:center;
+}
+
+nav ul li a{
+color:white;text-decoration:none;
+font-weight:500;
+}
+
+.login-btn{
+background:#ff7a00;border:none;
+padding:10px 25px;color:white;
+border-radius:5px;cursor:pointer;
+}
+
+.menu-icon{
+display:none;font-size:28px;color:white;cursor:pointer;
+}
+
+/* HERO */
+.hero{
+display:grid;grid-template-columns:1fr 1fr;align-items:center;
+padding:140px 80px;gap:60px;position:relative;
+}
+
+.hero-animation{
+position:absolute;top:140px;left:60px;width:400px;height:300px;
+overflow:hidden;border-radius:20px;box-shadow:0 0 30px black;
+}
+
+.hero-animation img{
+width:100%;height:100%;object-fit:cover;position:absolute;
+animation:slider 16s infinite;opacity:0;
+}
+
+.hero-animation img:nth-child(1){animation-delay:0s;}
+.hero-animation img:nth-child(2){animation-delay:4s;}
+.hero-animation img:nth-child(3){animation-delay:8s;}
+.hero-animation img:nth-child(4){animation-delay:12s;}
+
+@keyframes slider{
+0%{opacity:0;}5%{opacity:1;}25%{opacity:1;}30%{opacity:0;}100%{opacity:0;}
+}
+
+.hero-text h1{font-size:55px;}
+.hero-text span{color:#ff7a00}
+.hero-text p{margin:25px 0;font-size:18px;}
+
+.btn{
+padding:14px 30px;background:#ff7a00;border:none;
+color:white;border-radius:6px;cursor:pointer;margin-right:15px;
+}
+
+.hero-img img{
+width:100%;border-radius:20px;box-shadow:0 0 40px black;
+}
+
+/* CAROUSEL */
+.carousel-container{padding:80px 60px;position:relative;overflow:hidden;}
+.carousel-title{color:#ff7a00;font-size:35px;margin-bottom:40px;text-align:center;}
+
+.carousel-track{display:flex;transition:transform 0.5s ease-in-out;gap:20px;}
+
+.carousel-item{
+min-width:250px;border-radius:15px;overflow:hidden;background:#13273d;
+}
+
+.carousel-item img{
+width:100%;height:180px;object-fit:cover;
+}
+
+.carousel-item h3{padding:10px 15px;color:#ff7a00;}
+.carousel-item p{padding:0 15px 15px;font-size:14px;}
+
+.carousel-button{
+position:absolute;top:50%;transform:translateY(-50%);
+background:#ff7a00;border:none;color:white;font-size:24px;
+padding:10px 15px;cursor:pointer;
+}
+.prev{left:10px;}
+.next{right:10px;}
+
+/* SERVICES */
+.services{padding:80px 60px;text-align:center;}
+.services h2{color:#ff7a00;margin-bottom:40px;}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.card{
+background:#13273d;padding:30px;border-radius:15px;
+line-height:1.6;
+}
+
+/* FOOTER */
+footer{background:#08131f;padding:40px;text-align:center;margin-top:60px;}
+
+/* MOBILE SIGNUP */
+.signup-mobile{display:none;}
+
+/* RESPONSIVE */
+@media (max-width:992px){
+.hero{grid-template-columns:1fr;text-align:center;padding:140px 30px 80px;}
+.hero-animation{position:relative;left:auto;top:auto;margin:auto;width:90%;height:220px;}
+.hero-img{margin-top:30px;}
+}
+
+@media (max-width:768px){
+
+nav{padding:15px 20px;}
+
+nav ul{
+display:none;
+flex-direction:column;
+background:#08131f;
+position:absolute;
+top:70px;
+right:0;
+width:220px;
+padding:20px;
+gap:20px;
+}
+
+nav ul.active{display:flex;}
+
+.menu-icon{display:block;}
+
+.login-btn{display:none;}
+
+.signup-mobile{display:block;text-align:center;}
+
+.signup-mobile .login-btn{
+display:block;width:100%;
+}
+
+.hero-text h1{font-size:32px;}
+}
+
+</style>
+</head>
+<body>
+<nav id="navbar">
+
+<div class="logo">
+<img src="images/logo.png">
+<p>Isaac Blaze Kitchen</p>
+</div>
+
+<ul id="navList">
+<li><a href="index.html">Home</a></li>
+<li><a href="signup.html">Menu</a></li>
+<li><a href="service.html">Service</a></li>
+<li><a href="contactpage.html">Contact</a></li>
+<div id="google_translate_element"><h1>Change language</h1></div>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en'
+  }, 'google_translate_element');
+}
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<li class="signup-mobile">
+<a href="signup.html"></a><button class="login-btn">Sign_Up</button></a>
+
+</li>
+</ul>
+
+<a href="signup.html"><button class="login-btn">Sign_Up</button></a>
+
+<i class="fas fa-bars menu-icon" id="menuIcon"></i>
+
+</nav>
+
+<section class="hero">
+<br>
+
+<div class="hero-animation">
+<img src="images/1.jpg">
+<img src="images/2.jpg">
+<img src="images/3.jpg">
+<img src="images/4.jpg">
+</div>
+
+
+<div class="hero-img">
+
+<img src="photo.png">
+</div>
+<div class="hero-text">
+<h1>Taste The Best <br><span>Fast Food Experience</span></h1>
+<p>Fresh, hot, and delicious meals delivered fast.</p>
+<a href="signup.html"><button class="btn">Order Now</button></a>
+<a href="signup.html"><button class="btn">View Menu</button></a>
+</div>
+
+
+
+</section>
+
+<section class="carousel-container">
+<h2 class="carousel-title">Our Popular Foods</h2>
+
+<button class="carousel-button prev">&#10094;</button>
+
+<div class="carousel-track" id="carouselTrack">
+<div class="carousel-item"><img src="images/3.jpg"><h3>French Fries</h3><p>Crispy golden fries served hot.</p></div>
+<div class="carousel-item"><img src="images/5.jpg"><h3>Grilled Beef</h3><p>Juicy grilled beef full of flavor.</p></div>
+<div class="carousel-item"><img src="images/16.jpg"><h3>Rice Combo</h3><p>Perfect rice served with meat.</p></div>
+<div class="carousel-item"><img src="images/8.jpg"><h3>Dessert</h3><p>Sweet treats to finish your meal.</p></div>
+</div>
+
+<button class="carousel-button next">&#10095;</button>
+</section>
+
+<section class="services">
+<h2>Our Services</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Fast Delivery</h3>
+<p>We deliver hot and fresh meals quickly to your doorstep, ensuring you enjoy your food without waiting.</p>
+</div>
+
+<div class="card">
+<h3>Dine In Experience</h3>
+<p>Enjoy a comfortable and relaxing environment while tasting our delicious meals prepared by professional chefs.</p>
+</div>
+
+<div class="card">
+<h3>Catering Services</h3>
+<p>We provide catering for weddings, parties, meetings, and events with high-quality food and professional service.</p>
+</div>
+
+<div class="card">
+<h3>Online Ordering</h3>
+<p>Order your favorite meals easily through our website and get them delivered fast and safely.</p>
+</div>
+
+</div>
+</section>
+
+<footer>
+<h3>Isaac Blaze Kitchen</h3>
+<p>Best restaurant experience</p>
+</footer>
+
+<script>
+window.addEventListener("scroll",()=>{
+document.getElementById("navbar").classList.toggle("scrolled",window.scrollY>50);
+});
+
+document.getElementById("menuIcon").onclick=()=>{
+document.getElementById("navList").classList.toggle("active");
+};
+
+document.querySelectorAll("#navList a").forEach(link=>{
+link.onclick=()=>{
+document.getElementById("navList").classList.remove("active");
+};
+});
+
+const track=document.getElementById("carouselTrack");
+let index=0;
+
+document.querySelector(".next").onclick=()=>{
+index++;
+if(index>track.children.length-3) index=0;
+track.style.transform=`translateX(-${index*270}px)`;
+}
+
+document.querySelector(".prev").onclick=()=>{
+index--;
+if(index<0) index=track.children.length-3;
+track.style.transform=`translateX(-${index*270}px)`;
+}
+</script>
+
+</body>
+</html>

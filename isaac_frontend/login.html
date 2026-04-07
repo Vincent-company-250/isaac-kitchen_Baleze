@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="images/logo.png" type="image/png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+body{background:#0c1b2a;color:white;}
+.center{height:100vh;display:flex;justify-content:center;align-items:center;}
+.login-box{background:#13273d;padding:40px;border-radius:12px;width:350px;}
+.login-box h2{color:#ff7a00;margin-bottom:20px;text-align:center;}
+input{width:100%;padding:10px;margin-bottom:10px;border:none;border-radius:6px;background:#08131f;color:white;}
+button{width:100%;padding:10px;border:none;background:#ff7a00;color:white;border-radius:6px;cursor:pointer;}
+.error{color:red;text-align:center;margin-top:10px}
+.link-text{text-align:center;margin-top:10px;cursor:pointer;}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="center">
+  <div class="login-box">
+    <h2>Addimn Login</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+      <div class="error" id="loginError"></div>
+    </form>
+    <p class="link-text" onclick="shwSignup()">-</p>
+  </div>
+</div>
+
+<!-- SIGNUP PAGE -->
+<div id="signupPage" class="center" style="display:none;">
+  <div class="login-box">
+    <h2>Signup</h2>
+    <form id="signupForm">
+      <input type="text" id="fullname" placeholder="Full Name" required>
+      <input type="email" id="signupEmail" placeholder="Email" required>
+      <input type="text" id="phone" placeholder="Phone" required>
+      <input type="password" id="signupPassword" placeholder="Password" required>
+      <button type="submit">Create Account</button>
+      <div class="error" id="signupError"></div>
+    </form>
+    <p class="link-text" onclick="showLogin()">Back to Login</p>
+  </div>
+</div>
+
+<!-- OTP PAGE -->
+<div id="otpPage" class="center" style="display:none;">
+  <div class="login-box">
+    <h2>Verify OTP</h2>
+    <form id="otpForm">
+      <input type="text" id="otp" placeholder="Enter OTP" required>
+      <button type="submit">Verify</button>
+      <div class="error" id="otpError"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+const API = "http://localhost:5000/api";
+
+// PAGES
+const loginPage = document.getElementById("loginPage");
+const signupPage = document.getElementById("signupPage");
+const otpPage = document.getElementById("otpPage");
+let currentUserId = null;
+
+// SHOW/HIDE PAGES
+function showLogin(){
+  loginPage.style.display="flex";
+  signupPage.style.display="none";
+  otpPage.style.display="none";
+}
+function showSignup(){
+  signupPage.style.display="flex";
+  loginPage.style.display="none";
+  otpPage.style.display="none";
+}
+function showOTP(){
+  otpPage.style.display="flex";
+  signupPage.style.display="none";
+  loginPage.style.display="none";
+}
+
+// LOGIN FORM
+document.getElementById("loginForm").addEventListener("submit", async(e)=>{
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const error = document.getElementById("loginError");
+  error.innerText = "";
+
+  try{
+    const res = await fetch(API + "/auth/login", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({email,password})
+    });
+    const data = await res.json();
+
+    if(!res.ok){
+      error.innerText = data.error || "Login failed";
+      return;
+    }
+
+    localStorage.setItem("token", data.token);
+
+    // REDIRECT TO DASHBOARD PAGE
+    window.location.href = "dashborad.html";
+
+  }catch(err){
+    error.innerText = "Server error";
+  }
+});
+
+// SIGNUP FORM
+document.getElementById("signupForm").addEventListener("submit", async(e)=>{
+  e.preventDefault();
+  const res = await fetch(API + "/auth/signup", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      fullname:document.getElementById("fullname").value,
+      email:document.getElementById("signupEmail").value,
+      password:document.getElementById("signupPassword").value,
+      phone:document.getElementById("phone").value
+    })
+  });
+  const data = await res.json();
+  if(!res.ok){
+    document.getElementById("signupError").innerText = data.error || "Signup failed";
+    return;
+  }
+  currentUserId = data.userId;
+  showOTP();
+});
+
+// OTP FORM
+document.getElementById("otpForm").addEventListener("submit", async(e)=>{
+  e.preventDefault();
+  const res = await fetch(API + "/auth/verify-otp", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      userId:currentUserId,
+      otp:document.getElementById("otp").value
+    })
+  });
+  const data = await res.json();
+  if(!res.ok){
+    document.getElementById("otpError").innerText = data.error || "OTP verification failed";
+    return;
+  }
+  alert("Account verified! Please login");
+  showLogin();
+});
+</script>
+
+</body>
+</html>
