@@ -185,7 +185,7 @@ alert("Passwords do not match");
 return;
 }
 
-const res=await fetch("https://isaac-kitchen.onrender.com//api/auth/signup",{
+const res=await fetch("https://isaac-kitchen.onrender.com/api/auth/signup",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({fullname,email,password,phone})
@@ -209,7 +209,7 @@ e.preventDefault();
 const otp=otpForm.otp.value;
 const userId=localStorage.getItem("userId");
 
-const res=await fetch("https://isaac-kitchen.onrender.com//api/auth/verify-otp",{
+const res=await fetch("https://isaac-kitchen.onrender.com/api/auth/verify-otp",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({userId,otp})
@@ -232,7 +232,7 @@ e.preventDefault();
 const email=loginForm.email.value;
 const password=loginForm.password.value;
 
-const res=await fetch("https://isaac-kitchen.onrender.com//api/auth/login",{
+const res=await fetch("https://isaac-kitchen.onrender.com/api/auth/login",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email,password})
