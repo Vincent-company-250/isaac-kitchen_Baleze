@@ -142,7 +142,7 @@ let cart = [];
 // Load menu
 async function loadMenu(){
   try{
-    const res = await fetch("https://isaac-kitchen.onrender.com//api/menu");
+    const res = await fetch("https://isaac-kitchen.onrender.com/api/menu");
     if(!res.ok) throw new Error("Failed to fetch menu");
     const menuItems = await res.json();
     menuContainer.innerHTML = "";
