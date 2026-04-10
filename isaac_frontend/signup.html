@@ -1,154 +1,244 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Auth</title>
-<style>
-body{font-family:Arial;background:#0c1b2a;color:white;text-align:center;}
-form{display:none;margin:20px auto;width:300px;}
-form.active{display:block;}
-input,button{width:100%;padding:10px;margin:5px;}
-</style>
-</head>
-
-<body>
-
-<h2>Auth System</h2>
-
-<button onclick="showLogin()">Login</button>
-<button onclick="showSignup()">Signup</button>
-
-<form id="signupForm" class="active">
-<input name="fullname" placeholder="Fullname" required>
-<input name="email" placeholder="Email" required>
-<input name="phone" placeholder="Phone" required>
-<input name="password" type="password" placeholder="Password" required>
-<input name="confirmPassword" type="password" placeholder="Confirm Password" required>
-<button>Signup</button>
-</form>
-
-<form id="otpForm">
-<input name="otp" placeholder="Enter OTP">
-<button>Verify</button>
-</form>
-
-<form id="loginForm">
-<input name="email" placeholder="Email">
-<input name="password" type="password" placeholder="Password">
-<button>Login</button>
-</form>
-
 <script>
-const API="https://isaac-kitchen.onrender.com/api/auth";
+const API = "https://isaac-kitchen.onrender.com/api/auth";
 
-const signupForm=document.getElementById("signupForm");
-const otpForm=document.getElementById("otpForm");
-const loginForm=document.getElementById("loginForm");
+// ELEMENTS
+const loginBtn = document.getElementById("loginBtn");
+const signupBtn = document.getElementById("signupBtn");
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+const otpForm = document.getElementById("otpForm");
 
-function showSignup(){
-signupForm.classList.add("active");
-loginForm.classList.remove("active");
-otpForm.classList.remove("active");
+// ================= UI CONTROL =================
+function showLogin(){
+  loginForm.classList.add("active");
+  signupForm.classList.remove("active");
+  otpForm.classList.remove("active");
+  loginBtn.classList.add("active");
+  signupBtn.classList.remove("active");
 }
 
-function showLogin(){
-loginForm.classList.add("active");
-signupForm.classList.remove("active");
-otpForm.classList.remove("active");
+function showSignup(){
+  signupForm.classList.add("active");
+  loginForm.classList.remove("active");
+  otpForm.classList.remove("active");
+  signupBtn.classList.add("active");
+  loginBtn.classList.remove("active");
 }
 
 function showOTP(){
-otpForm.classList.add("active");
-signupForm.classList.remove("active");
+  signupForm.classList.remove("active");
+  loginForm.classList.remove("active");
+  otpForm.classList.add("active");
 }
 
-// SIGNUP
-signupForm.addEventListener("submit",async e=>{
-e.preventDefault();
+// BUTTON EVENTS
+loginBtn.onclick = showLogin;
+signupBtn.onclick = showSignup;
 
-try{
-alert("Server waking up...");
-
-const dataForm=new FormData(signupForm);
-
-if(dataForm.get("password")!==dataForm.get("confirmPassword")){
-alert("Passwords mismatch");
-return;
-}
-
-const res=await fetch(API+"/signup",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-fullname:dataForm.get("fullname"),
-email:dataForm.get("email"),
-phone:dataForm.get("phone"),
-password:dataForm.get("password")
-})
+// ================= PASSWORD TOGGLE =================
+document.querySelectorAll(".toggle-password").forEach(icon=>{
+  icon.addEventListener("click", ()=>{
+    const input = icon.previousElementSibling;
+    if(input.type === "password"){
+      input.type = "text";
+      icon.classList.replace("fa-eye","fa-eye-slash");
+    }else{
+      input.type = "password";
+      icon.classList.replace("fa-eye-slash","fa-eye");
+    }
+  });
 });
 
-const data=await res.json();
-
-if(res.ok){
-localStorage.setItem("userId",data.userId);
-alert("OTP: "+data.otp);
-showOTP();
-}else{
-alert(data.error);
+// ================= HELPER FUNCTIONS =================
+function showMessage(msg){
+  alert(msg);
 }
 
-}catch(err){
-alert("Error: server down or sleeping");
+function saveUserId(id){
+  localStorage.setItem("userId", id);
 }
-});
 
-// VERIFY OTP
-otpForm.addEventListener("submit",async e=>{
-e.preventDefault();
-
-const otp=otpForm.otp.value;
-const userId=localStorage.getItem("userId");
-
-const res=await fetch(API+"/verify-otp",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({userId,otp})
-});
-
-const data=await res.json();
-
-if(res.ok){
-alert("Verified!");
-showLogin();
-}else{
-alert(data.error);
+function getUserId(){
+  return localStorage.getItem("userId");
 }
-});
 
-// LOGIN
-loginForm.addEventListener("submit",async e=>{
-e.preventDefault();
-
-const email=loginForm.email.value;
-const password=loginForm.password.value;
-
-const res=await fetch(API+"/login",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email,password})
-});
-
-const data=await res.json();
-
-if(res.ok){
-localStorage.setItem("token",data.token);
-alert("Login success");
-}else{
-alert(data.error);
+function saveToken(token){
+  localStorage.setItem("token", token);
 }
+
+function validateEmail(email){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function validatePhone(phone){
+  return phone.length >= 10;
+}
+
+function setLoading(button, text){
+  button.disabled = true;
+  button.innerText = text;
+}
+
+function resetButton(button, text){
+  button.disabled = false;
+  button.innerText = text;
+}
+
+// ================= SIGNUP =================
+signupForm.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  const btn = signupForm.querySelector("button");
+
+  try{
+    const fullname = signupForm.fullname.value.trim();
+    const email = signupForm.email.value.trim();
+    const phone = signupForm.phone.value.trim();
+    const password = signupForm.password.value;
+    const confirmPassword = signupForm.confirmPassword.value;
+
+    // VALIDATION
+    if(!fullname || !email || !phone || !password){
+      return showMessage("Fill all fields");
+    }
+
+    if(!validateEmail(email)){
+      return showMessage("Invalid email");
+    }
+
+    if(!validatePhone(phone)){
+      return showMessage("Invalid phone number");
+    }
+
+    if(password.length < 6){
+      return showMessage("Password must be 6+ characters");
+    }
+
+    if(password !== confirmPassword){
+      return showMessage("Passwords do not match");
+    }
+
+    setLoading(btn,"Creating account...");
+
+    showMessage("Server waking up... please wait");
+
+    const res = await fetch(`${API}/signup`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({fullname,email,password,phone})
+    });
+
+    const data = await res.json();
+
+    if(res.ok){
+      saveUserId(data.userId);
+
+      // TEMP OTP DISPLAY
+      showMessage("OTP Code: " + data.otp);
+
+      showOTP();
+    }else{
+      showMessage(data.error || "Signup failed");
+    }
+
+  }catch(err){
+    console.error(err);
+    showMessage("Network error or server sleeping");
+  }finally{
+    resetButton(btn,"Sign Up");
+  }
+});
+
+// ================= VERIFY OTP =================
+otpForm.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  const btn = otpForm.querySelector("button");
+
+  try{
+    const otp = otpForm.otp.value.trim();
+    const userId = getUserId();
+
+    if(!otp){
+      return showMessage("Enter OTP");
+    }
+
+    if(!userId){
+      return showMessage("Session expired, signup again");
+    }
+
+    setLoading(btn,"Verifying...");
+
+    const res = await fetch(`${API}/verify-otp`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({userId,otp})
+    });
+
+    const data = await res.json();
+
+    if(res.ok){
+      showMessage("Account verified successfully!");
+      showLogin();
+    }else{
+      showMessage(data.error || "Invalid OTP");
+    }
+
+  }catch(err){
+    console.error(err);
+    showMessage("Server error");
+  }finally{
+    resetButton(btn,"Verify OTP");
+  }
+});
+
+// ================= LOGIN =================
+loginForm.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  const btn = loginForm.querySelector("button");
+
+  try{
+    const email = loginForm.email.value.trim();
+    const password = loginForm.password.value;
+
+    if(!email || !password){
+      return showMessage("Fill all fields");
+    }
+
+    setLoading(btn,"Logging in...");
+
+    const res = await fetch(`${API}/login`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({email,password})
+    });
+
+    const data = await res.json();
+
+    if(res.ok){
+      saveToken(data.token);
+      showMessage("Login successful");
+
+      // redirect
+      window.location.href="checkout.html";
+    }else{
+      showMessage(data.error || "Login failed");
+    }
+
+  }catch(err){
+    console.error(err);
+    showMessage("Server error or sleeping");
+  }finally{
+    resetButton(btn,"Login");
+  }
+});
+
+// ================= AUTO SESSION CHECK =================
+window.addEventListener("load", ()=>{
+  const token = localStorage.getItem("token");
+  if(token){
+    console.log("User already logged in");
+  }
 });
 </script>
-
-</body>
-</html>
