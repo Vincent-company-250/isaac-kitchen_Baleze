@@ -1,3 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <link rel="icon" href="images/logo.png" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isaac Blaze Kitchen - Auth</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+body{background:#0c1b2a;color:white;display:flex;flex-direction:column;min-height:100vh;}
+
+nav{display:flex;justify-content:space-between;padding:20px 40px;background:#08131f;}
+.logo{color:#ff7a00;font-size:22px;font-weight:bold;}
+
+.hero-page{text-align:center;padding:100px 20px 30px;}
+.hero-page h1{color:#ff7a00;font-size:38px;}
+
+.form-container{display:flex;justify-content:center;flex:1;}
+.form-box{background:#13273d;padding:30px;border-radius:12px;width:100%;max-width:380px;}
+
+.toggle-buttons{display:flex;gap:15px;justify-content:center;margin-bottom:20px;}
+.toggle-buttons button{padding:8px 20px;border:none;background:#08131f;color:white;border-radius:6px;cursor:pointer;}
+.toggle-buttons .active{background:#ff7a00;}
+
+form{display:none;}
+form.active{display:block;}
+
+.input-group{position:relative;}
+input{width:100%;padding:12px;margin-bottom:15px;border:none;border-radius:6px;}
+input:focus{outline:none;box-shadow:0 0 8px #ff7a00;}
+
+.input-group i{position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:#ff7a00;}
+
+.submit-btn{width:100%;padding:12px;background:#ff7a00;border:none;color:white;border-radius:6px;cursor:pointer;}
+.submit-btn:hover{transform:scale(1.03);}
+
+.social-icons{display:flex;justify-content:center;gap:15px;margin-top:10px;}
+.social-icons i{cursor:pointer;}
+.social-icons i:hover{color:#ff7a00;}
+
+footer{text-align:center;padding:15px;background:#08131f;margin-top:auto;}
+</style>
+
+</head>
+
+<body>
+
+<nav>
+<div class="logo">Isaac Blaze Kitchen</div>
+</nav>
+
+<section class="hero-page">
+<h1>Welcome</h1>
+<p>Login, Signup & Verify OTP</p>
+</section>
+
+<section class="form-container">
+<div class="form-box">
+
+<div class="toggle-buttons">
+<button id="loginBtn" class="active">Login</button>
+<button id="signupBtn">Sign Up</button>
+</div>
+
+<!-- LOGIN -->
+
+<form id="loginForm" class="active">
+<input name="email" type="email" placeholder="Email" required>
+
+<div class="input-group">
+<input name="password" type="password" placeholder="Password" required>
+<i class="fas fa-eye toggle-password"></i>
+</div>
+
+<button class="submit-btn">Login</button>
+
+</form>
+
+<!-- SIGNUP -->
+
+<form id="signupForm">
+<input name="fullname" type="text" placeholder="Full Name" required>
+<input name="email" type="email" placeholder="Email" required>
+<input name="phone" type="text" placeholder="Phone (+250...)" required>
+
+<div class="input-group">
+<input name="password" type="password" placeholder="Password" required>
+<i class="fas fa-eye toggle-password"></i>
+</div>
+
+<div class="input-group">
+<input name="confirmPassword" type="password" placeholder="Confirm Password" required>
+<i class="fas fa-eye toggle-password"></i>
+</div>
+
+<button class="submit-btn">Sign Up</button>
+
+</form>
+
+<!-- OTP -->
+
+<form id="otpForm">
+<input name="otp" type="text" placeholder="Enter OTP Code" required>
+<button class="submit-btn">Verify OTP</button>
+
+<p style="text-align:center;font-size:14px;margin-top:10px;">
+Check your phone/email for OTP
+</p>
+</form>
+
+</div>
+</section>
+
+<footer>
+<p>Isaac Blaze Kitchen © 2026</p>
+</footer>
+
 <script>
 const API = "https://isaac-kitchen.onrender.com/api/auth";
 
@@ -8,7 +129,7 @@ const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
 const otpForm = document.getElementById("otpForm");
 
-// ================= UI CONTROL =================
+// UI CONTROL
 function showLogin(){
   loginForm.classList.add("active");
   signupForm.classList.remove("active");
@@ -31,25 +152,20 @@ function showOTP(){
   otpForm.classList.add("active");
 }
 
-// BUTTON EVENTS
 loginBtn.onclick = showLogin;
 signupBtn.onclick = showSignup;
 
-// ================= PASSWORD TOGGLE =================
+// PASSWORD TOGGLE
 document.querySelectorAll(".toggle-password").forEach(icon=>{
   icon.addEventListener("click", ()=>{
     const input = icon.previousElementSibling;
-    if(input.type === "password"){
-      input.type = "text";
-      icon.classList.replace("fa-eye","fa-eye-slash");
-    }else{
-      input.type = "password";
-      icon.classList.replace("fa-eye-slash","fa-eye");
-    }
+    input.type = input.type === "password" ? "text" : "password";
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
   });
 });
 
-// ================= HELPER FUNCTIONS =================
+// HELPERS
 function showMessage(msg){
   alert(msg);
 }
@@ -66,62 +182,21 @@ function saveToken(token){
   localStorage.setItem("token", token);
 }
 
-function validateEmail(email){
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function validatePhone(phone){
-  return phone.length >= 10;
-}
-
-function setLoading(button, text){
-  button.disabled = true;
-  button.innerText = text;
-}
-
-function resetButton(button, text){
-  button.disabled = false;
-  button.innerText = text;
-}
-
-// ================= SIGNUP =================
+// SIGNUP
 signupForm.addEventListener("submit", async (e)=>{
   e.preventDefault();
 
-  const btn = signupForm.querySelector("button");
+  const fullname = signupForm.fullname.value.trim();
+  const email = signupForm.email.value.trim();
+  const phone = signupForm.phone.value.trim();
+  const password = signupForm.password.value;
+  const confirmPassword = signupForm.confirmPassword.value;
+
+  if(password !== confirmPassword){
+    return showMessage("Passwords do not match");
+  }
 
   try{
-    const fullname = signupForm.fullname.value.trim();
-    const email = signupForm.email.value.trim();
-    const phone = signupForm.phone.value.trim();
-    const password = signupForm.password.value;
-    const confirmPassword = signupForm.confirmPassword.value;
-
-    // VALIDATION
-    if(!fullname || !email || !phone || !password){
-      return showMessage("Fill all fields");
-    }
-
-    if(!validateEmail(email)){
-      return showMessage("Invalid email");
-    }
-
-    if(!validatePhone(phone)){
-      return showMessage("Invalid phone number");
-    }
-
-    if(password.length < 6){
-      return showMessage("Password must be 6+ characters");
-    }
-
-    if(password !== confirmPassword){
-      return showMessage("Passwords do not match");
-    }
-
-    setLoading(btn,"Creating account...");
-
-    showMessage("Server waking up... please wait");
-
     const res = await fetch(`${API}/signup`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -132,43 +207,25 @@ signupForm.addEventListener("submit", async (e)=>{
 
     if(res.ok){
       saveUserId(data.userId);
-
-      // TEMP OTP DISPLAY
-      showMessage("OTP Code: " + data.otp);
-
+      showMessage("OTP sent: " + data.otp);
       showOTP();
     }else{
-      showMessage(data.error || "Signup failed");
+      showMessage(data.error);
     }
 
-  }catch(err){
-    console.error(err);
-    showMessage("Network error or server sleeping");
-  }finally{
-    resetButton(btn,"Sign Up");
+  }catch{
+    showMessage("Server error");
   }
 });
 
-// ================= VERIFY OTP =================
+// VERIFY OTP
 otpForm.addEventListener("submit", async (e)=>{
   e.preventDefault();
 
-  const btn = otpForm.querySelector("button");
+  const otp = otpForm.otp.value.trim();
+  const userId = getUserId();
 
   try{
-    const otp = otpForm.otp.value.trim();
-    const userId = getUserId();
-
-    if(!otp){
-      return showMessage("Enter OTP");
-    }
-
-    if(!userId){
-      return showMessage("Session expired, signup again");
-    }
-
-    setLoading(btn,"Verifying...");
-
     const res = await fetch(`${API}/verify-otp`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -178,36 +235,25 @@ otpForm.addEventListener("submit", async (e)=>{
     const data = await res.json();
 
     if(res.ok){
-      showMessage("Account verified successfully!");
+      showMessage("Verified successfully!");
       showLogin();
     }else{
-      showMessage(data.error || "Invalid OTP");
+      showMessage(data.error);
     }
 
-  }catch(err){
-    console.error(err);
+  }catch{
     showMessage("Server error");
-  }finally{
-    resetButton(btn,"Verify OTP");
   }
 });
 
-// ================= LOGIN =================
+// LOGIN
 loginForm.addEventListener("submit", async (e)=>{
   e.preventDefault();
 
-  const btn = loginForm.querySelector("button");
+  const email = loginForm.email.value.trim();
+  const password = loginForm.password.value;
 
   try{
-    const email = loginForm.email.value.trim();
-    const password = loginForm.password.value;
-
-    if(!email || !password){
-      return showMessage("Fill all fields");
-    }
-
-    setLoading(btn,"Logging in...");
-
     const res = await fetch(`${API}/login`,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -219,26 +265,16 @@ loginForm.addEventListener("submit", async (e)=>{
     if(res.ok){
       saveToken(data.token);
       showMessage("Login successful");
-
-      // redirect
       window.location.href="checkout.html";
     }else{
-      showMessage(data.error || "Login failed");
+      showMessage(data.error);
     }
 
-  }catch(err){
-    console.error(err);
-    showMessage("Server error or sleeping");
-  }finally{
-    resetButton(btn,"Login");
-  }
-});
-
-// ================= AUTO SESSION CHECK =================
-window.addEventListener("load", ()=>{
-  const token = localStorage.getItem("token");
-  if(token){
-    console.log("User already logged in");
+  }catch{
+    showMessage("Server error");
   }
 });
 </script>
+
+</body>
+</html>
